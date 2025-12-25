@@ -1,0 +1,12 @@
+{
+    "extends": "../../tsconfig.json",
+    "compilerOptions": {
+        "outDir": "../../dist/apps/mock-bank",
+        "types": [
+            "node"
+        ]
+    },
+    "include": [
+        "src/**/*"
+    ]
+}

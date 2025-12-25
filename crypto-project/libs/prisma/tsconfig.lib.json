@@ -1,0 +1,12 @@
+{
+    "extends": "../../tsconfig.json",
+    "compilerOptions": {
+        "outDir": "../../dist/libs/prisma",
+        "types": [
+            "node"
+        ]
+    },
+    "include": [
+        "src/**/*"
+    ]
+}

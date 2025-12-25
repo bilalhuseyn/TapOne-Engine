@@ -1,0 +1,37 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --background: #0f172a;
+  --foreground: #f3f4f6;
+}
+
+/* Koyu mod zorunluluğu için */
+@media (prefers-color-scheme: dark) {
+  :root {
+    --background: #0f172a;
+    --foreground: #f3f4f6;
+  }
+}
+
+body {
+  /* O havalı koyu gradyan arka plan */
+  background: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #000000 100%);
+  color: var(--foreground);
+  font-family: Arial, Helvetica, sans-serif;
+  min-height: 100vh;
+  /* Dikey kaydırmada arka planın kesilmesini önler */
+  background-attachment: fixed;
+}
+
+/* Glassmorphism efektleri için özel sınıflar */
+@layer utilities {
+  .glass-card {
+    @apply bg-white/5 backdrop-blur-md border border-white/10 shadow-xl rounded-2xl;
+  }
+
+  .glass-input {
+    @apply bg-black/40 border border-white/10 text-white placeholder-gray-500 focus:border-indigo-500/50 focus:ring-1 focus:ring-indigo-500/50 transition-all rounded-lg p-3 outline-none;
+  }
+}

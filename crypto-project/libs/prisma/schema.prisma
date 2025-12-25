@@ -1,0 +1,77 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum Currency {
+  AZN
+  USDT
+}
+
+enum TransactionType {
+  BUY
+  SELL
+  DEPOSIT
+}
+
+enum TransactionStatus {
+  PENDING
+  COMPLETED
+  FAILED
+}
+
+model User {
+  id             String    @id @default(uuid())
+  bankCustomerId String    @unique
+  kycLevel       Int       @default(1)
+  accounts       Account[]
+  transactions   Transaction[]
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime  @updatedAt
+}
+
+model Account {
+  id            String   @id @default(uuid())
+  userId        String
+  currency      Currency
+  balance       Decimal  @db.Decimal(20, 8)
+  lockedBalance Decimal  @db.Decimal(20, 8)
+  version       Int      @default(0)
+  user          User     @relation(fields: [userId], references: [id])
+  ledgers       Ledger[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([userId, currency])
+}
+
+model Transaction {
+  id             String            @id @default(uuid())
+  userId         String
+  idempotencyKey String            @unique
+  type           TransactionType
+  status         TransactionStatus
+  amountIn       Decimal           @db.Decimal(20, 8)
+  amountOut      Decimal           @db.Decimal(20, 8)
+  feeAmount      Decimal           @db.Decimal(20, 8)
+  user           User              @relation(fields: [userId], references: [id])
+  ledgers        Ledger[]
+  createdAt      DateTime          @default(now())
+  updatedAt      DateTime          @updatedAt
+}
+
+model Ledger {
+  id            String      @id @default(uuid())
+  transactionId String
+  accountId     String
+  amount        Decimal     @db.Decimal(20, 8)
+  balanceAfter  Decimal     @db.Decimal(20, 8)
+  transaction   Transaction @relation(fields: [transactionId], references: [id])
+  account       Account     @relation(fields: [accountId], references: [id])
+  createdAt     DateTime    @default(now())
+}
